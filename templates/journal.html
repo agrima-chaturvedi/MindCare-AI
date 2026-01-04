@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Journal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<style>
+      body {
+        background: url("{{ url_for('static', filename='images/' + bg_image) }}")
+                    center/cover no-repeat fixed;
+        height: 300vh;
+        margin: 0;
+    }
+</style>
+<body class="journal-page">
+  <header style="background-color: #2e7d32; color: white; padding: 15px; border-radius: 10px;">
+    📝 My Journal💚
+</header>
+
+
+  <main>
+    <!-- New Journal Entry Form -->
+    <div class="journal-form-card">
+      <form method="POST">
+        <input type="text" name="title" placeholder="Entry title (optional)" />
+        <textarea name="content" placeholder="Write your thoughts here..." rows="5"></textarea>
+        <button type="submit" class="save-btn">Save Entry</button>
+      </form>
+    </div>
+</main>
+    <!-- AI Suggestion -->
+    {% if suggestion %}
+    <div class="suggestion-card">
+      <h3>💡 Suggested Action</h3>
+      <p>{{ suggestion }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Recent Journal Entries -->
+    <div class="journal-entries">
+      <h1 style="color: #2e7d32;">Recent Entries</h1>
+      {% if recent_entries %}
+        {% for entry in recent_entries %}
+        
+          <div class="journal-entry-card">
+            <h4>{{ entry.title or 'Untitled' }} <small>{{ entry.date }}</small></h4>
+            <p>{{ entry.content }}</p>
+            <p><strong>Mood:</strong> {{ entry.mood | capitalize }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+      
+        <p>No entries yet. Start journaling today! 🌱</p>
+      {% endif %}
+    </div>
+
+    <a href="/dashboard" class="back-btn">⬅ Back to Dashboard</a>
+  
+</body>
+</html>

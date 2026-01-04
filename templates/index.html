@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Wellness Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <style>
+  body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+
+  background: url("{{ url_for('static', filename='images/' + bg_image) }}")
+                    center/cover no-repeat fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  /* optional soft overlay effect */
+  background-attachment: fixed;
+}
+
+    .container {
+      text-align: center;
+      background: #ffffffcc;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #2e8b57;
+      margin-bottom: 20px;
+    }
+    a {
+      display: inline-block;
+      text-decoration: none;
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: 0.3s ease;
+      background: #2e8b57;
+      color: white;
+    }
+    a:hover {
+      background: #246b44;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Mental Wellness Assistant 🌿</h1>
+    <a href="/login">Login</a>
+    <a href="/signup">Signup</a>
+  </div>
+</body>
+</html>

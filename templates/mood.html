@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mental Wellness Assistant - Mood Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='css/js/script.js') }}" defer></script>
+</head>
+<style>
+      body {
+        background: url("{{ url_for('static', filename='images/' + bg_image) }}")
+                    center/cover no-repeat fixed;
+        height: 300vh;
+        margin: 0;
+    }
+</style>
+<body class="mood-page">
+  <header>🌿 Track Your Mood</header>
+  <main>
+    <div class="container">
+      <!-- Form Section -->
+      <div class="form-container">
+        <form method="POST" class="mood-form">
+          <p>Select your mood:</p>
+          <div class="mood-options">
+            <button type="button" class="mood-btn" data-mood="happy">😊 Happy</button>
+            <button type="button" class="mood-btn" data-mood="sad">😔 Sad</button>
+            <button type="button" class="mood-btn" data-mood="angry">😡 Angry</button>
+            <button type="button" class="mood-btn" data-mood="anxious">😨 Anxious</button>
+          </div>
+          <input type="hidden" name="mood" id="moodInput">
+          <textarea name="note" placeholder="Write a note (optional)" rows="4"></textarea>
+          <button type="submit" class="save-btn">Save Mood</button>
+        </form>
+      </div>
+
+      <!-- Mood History Section -->
+      <div class="history-container">
+        <h3>📊 Recent Mood History</h3>
+        <ul class="mood-history">
+          {% for entry in recent_moods %}
+            <li>
+              <span>
+                {% if entry.mood == "happy" %}😊{% elif entry.mood == "sad" %}😔{% elif entry.mood == "angry" %}😡{% elif entry.mood == "anxious" %}😨{% else %}🌿{% endif %}
+                <strong>{{ entry.mood | capitalize }}</strong>
+              </span>
+              on {{ entry.date }}
+              {% if entry.note %}
+                <br><em>📝 {{ entry.note }}</em>
+              {% endif %}
+            </li>
+          {% else %}
+            <li>No mood history yet. Start tracking today! 🌱</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- Suggestion Card -->
+{% if suggestion %}
+<div class="suggestion-card">
+  <h3>💡 Wellness Suggestion</h3>
+  <p>{{ suggestion }}</p>
+</div>
+{% endif %}
+
+  </main>
+
+  <footer>
+    <a href="/dashboard" class="back-btn">⬅ Back to Dashboard</a>
+  </footer>
+</body>

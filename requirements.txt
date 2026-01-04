@@ -1,0 +1,6 @@
+flask
+pymongo
+transformers
+torch
+scikit-learn
+nltk

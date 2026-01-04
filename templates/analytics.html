@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mood Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="analytics-page">
+<style>
+  body {
+        background: url("{{ url_for('static', filename='images/' + bg_image) }}")
+                    center/cover no-repeat fixed;
+}
+
+</style>
+  <header>📊 Mood Analytics</header>
+
+  <main class="analytics-main">
+    <div class="charts-container">
+
+      <!-- Pie Chart: Mood Distribution -->
+      <div class="chart-card">
+        <h3>📊 Mood Distribution</h3>
+        <canvas id="moodPieChart"></canvas>
+      </div>
+
+      <!-- Line Chart: Mood Trend -->
+      <div class="chart-card">
+        <h3>📈 Mood Trend Over Time</h3>
+        <canvas id="moodLineChart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    window.onload = function() {
+
+      // -------------------
+      // Pie Chart: Mood Distribution
+      // -------------------
+      const chartData = {{ chart_data | safe }};
+      const pieLabels = Object.keys(chartData);
+      const pieValues = Object.values(chartData);
+
+      // Dynamic colors for moods
+      const moodColors = {
+        "happy": "#FFDD67",
+        "sad": "#6EC6FF",
+        "angry": "#FF6B6B",
+        "anxious": "#FFD966",
+        "neutral": "#A3A3A3",
+        "unknown": "#A3A3A3"
+      };
+      const pieColors = pieLabels.map(label => moodColors[label] || "#A3A3A3");
+
+      const pieCtx = document.getElementById('moodPieChart').getContext('2d');
+      new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+          labels: pieLabels,
+          datasets: [{
+            label: 'Mood Distribution',
+            data: pieValues,
+            backgroundColor: pieColors,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: true, text: 'Your Mood Distribution' }
+          }
+        }
+      });
+
+      // -------------------
+      // Line Chart: Mood Trend Over Time
+      // -------------------
+      const trendLabels = {{ trend_labels | safe }};
+      const trendMoods = {{ trend_data | safe }};
+
+      const moodMap = { "happy": 4, "anxious": 3, "angry": 2, "sad": 1, "neutral": 0, "unknown": 0 };
+      const trendValues = trendMoods.map(m => {
+        if (!(m in moodMap)) console.warn("Unknown mood:", m);
+        return moodMap[m] || 0;
+      });
+
+      const lineCtx = document.getElementById('moodLineChart').getContext('2d');
+      new Chart(lineCtx, {
+        type: 'line',
+        data: {
+          labels: trendLabels,
+          datasets: [{
+            label: 'Mood Over Time',
+            data: trendValues,
+            fill: false,
+            borderColor: '#00796b',
+            tension: 0.2,
+            pointBackgroundColor: trendValues.map(v => 
+              v==4?'#FFDD67':v==3?'#FFD966':v==2?'#FF6B6B':v==1?'#6EC6FF':'#A3A3A3'
+            )
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              min: 0,
+              max: 4,
+              ticks: {
+                stepSize: 1,
+                callback: function(value) {
+                  const labels = ["Neutral","Sad","Angry","Anxious","Happy"];
+                  return labels[value];
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Mood Trend Over Time' }
+          }
+        }
+      });
+
+    } // window.onload
+  </script>
+
+  <footer>
+    <a href="/dashboard" class="back-btn">⬅ Back to Dashboard</a>
+  </footer>
+</body>
+</html>
